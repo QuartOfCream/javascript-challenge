@@ -1,57 +1,41 @@
-// from data.js
+// create variable
 var tableData = data;
 
-
-var $searchButton = document.querySelector("#filter-btn");
-
-//event listener for later when the search button is click
-$searchButton.addEventListener("click", afterClickingSearch);
-
-//declare variable with d3.select
 var tbody = d3.select("tbody");
 
-//function to loop through using forEach and Object.entries
-function displayData(ufo){ 
-    tbody.text("")
-    ufo.forEach(function(diff_sights){
-    row = tbody.append("tr")
-    Object.entries(diff_sights).forEach(function([key, value]){
-        new_td = row.append("td").text(value)	
-    })
-})
-};
+data.forEach((ufoReport) => {
+    let row = tbody.append("tr");
+    Object.entries(ufoReport).forEach(([key, value]) => {
+        var cell = row.append("td");
+        cell.text(value);
+    });
+});
 
-displayData(tableData)
+// create the actual button variable
+var button = d3.select('#filter-btn');
 
-//create a function for searching
-function afterClickingSearch(event) {
+// once the user inputs something, this function will take the info and process it upon click
+button.on('click', function() {
 
-var dateEnter = document.querySelector("#datetime");
+    // make variables for inputs and values for date and city
+    var inputDate = d3.select('#date-filter');
+    var valueDate = inputDate.property('value');
 
-//prevent refreshing
-event.preventDefault();
+    // filter by date using user input
+    var filter = tableData.filter(item => item.datetime === valueDate)
 
-//filter the data 
-var filtered = dateEnter.value.trim();
-if (filtered != "") {
-  tableData = data.filter(function (data) {
-    var dataDate = data.datetime;
-    return dataDate === filtered;
-    
-   // d3.event.preventDefault();
-  });
-};
-//run the display function again after filtering
-displayData();
-}
+    // clear the table
+    tbody.html(``);
 
-//var $date = document.querySelector("#datetime");
-
-
-var resetbutton = d3.select("#reset-btn");
-//reset everything
-resetbutton.on("click", () => {
-	tbody.html("");
-	displayData(data)
-	console.log("Table reset")
-})
+    // to add filtered data
+    filter.forEach( item => {
+        var tr = tbody.append('tr');
+        tr.append('td').text(item.datetime);
+        tr.append('td').text(item.city);
+        tr.append('td').text(item.state);
+        tr.append('td').text(item.country);
+        tr.append('td').text(item.shape);
+        tr.append('td').text(item.durationMinutes);
+        tr.append('td').text(item.comments);
+    });
+});
