@@ -18,7 +18,7 @@ var button = d3.select('#filter-btn');
 button.on('click', function() {
 
     // make variables for inputs and values for date and city
-    var inputDate = d3.select('#date-filter');
+    var inputDate = d3.select('#datetime');
     var valueDate = inputDate.property('value');
 
     // filter by date using user input
